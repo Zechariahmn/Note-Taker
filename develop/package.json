@@ -4,11 +4,11 @@
     "description": "An application capable of creating and deleting notes depending on the user's choice",
     "main": "index.js",
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Zechariah Naitram",
     "license": "ISC",
     "dependencies": {
-      "express": "^4.17.1"
+        "express": "^4.18.2"
     }
-  }
+}
