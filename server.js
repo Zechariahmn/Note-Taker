@@ -1,64 +1,81 @@
-// Import dependencies
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const noteEntries = require("./db/db.json");
+const express = require("express");
+const fs = require("fs");
 
-// Import express server
-const app = express();
+const path = require("path");
+const database = require("./db/db.json");
 
-// Set the PORT
-const PORT = process.env.port || 3001;
+var app = express();
+var PORT = process.env.PORT || 3001;
 
-// Middleware to parse JSON and url encoded form data
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(express.static('public'));
 
-app.get('/api/notes', (req, res) => {
-    res.json(noteEntries.slice(1));
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public\index.html'));
-});
 
-// HTML routes
+app.get("/", function (req, res){
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+})
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public\index.html'));
-});
 
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public\notes.html'));
-});
+app.get("/notes", function(req, res){
+    res.sendFile(path.join(__dirname, "/public/notes.html"));
+})
 
-// Sets the function to create a new note
-function newNoteEntry (body, notesArray) {
-    const newNote = body;
-    if (!Array.isArray(notesArray))
-        notesArray = [];
 
-    if (notesArray.length === 0)
-        notesArray.push(0);
+app.route("/api/notes")
+    .get(function(req, res){
+        res.json(database);
+    })
 
-    body.id = notesArray[0];
-    notesArray[0]++;
+    .post(function(req, res){
+        let jsonPath = path.join(__dirname, "./db/db.json");
+        let newNote = req.body;
 
-    notesArray.push(newNote);
-    fs.writeFileSync(
-        path.join(__dirname, 'db\db.json'),
-        JSON.stringify(notesArray, null, 2)
-    );
-    return newNote;
-};
+        let largestId = 50;
 
-// Post route for submitting notes
-app.post('/api/notes', (req, res) => {
-    const newNote = newNoteEntry(req.body, noteEntries);
-    res.json(newNote);
-});
+        for (let i =0; i < database.length; i++) {
+            let eachnote = database[i];
+            if (eachnote.id > largestId){
+                largestId = eachnote.id;
+            }
+        }
+
+        newNote.id = largestId + 1;
+        database.push(newNote)
+        
+        fs.writeFile(jsonPath, JSON.stringify(database),function (err){
+            if (err){
+                return console.log(err);
+            }
+            console.log("saved note");
+        })
+        res.json(newNote);
+    })
+
+app.delete("/api/notes", function (req, res) {
+
+    let jsonPath = path.join(_dirname, "./db/db.json");
+
+    for (let i = 0; i < database.length; i++) {
+        if (database[i].id == req.params.id){
+            database.splice(i, 1);
+            break;
+        }
+    }
+
+    fs.writeFile(jsonPath, JSON.stringify(database),function (err){
+        if (err){
+            return console.log(err);
+        }
+        console.log("note deleted");
+         
+    })
+
+    res.json(database);
+
+})
 
 app.listen(PORT, () =>
-  console.log(`Example app listening at http://localhost:${PORT}`)
+  console.log(`listening at http://localhost:${PORT}`)
 );
