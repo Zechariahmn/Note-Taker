@@ -13,23 +13,24 @@ const PORT = process.env.port || 3001;
 // Middleware to parse JSON and url encoded form data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('./develop/public'));
+app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
     res.json(noteEntries.slice(1));
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './Develop/public/index.html'));
+    res.sendFile(path.join(__dirname, 'public\index.html'));
 });
 
 // HTML routes
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './Develop/public/notes.html'));
-});
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './Develop/public/index.html'));
+    res.sendFile(path.join(__dirname, 'public\index.html'));
+});
+
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public\notes.html'));
 });
 
 // Sets the function to create a new note
