@@ -31,6 +31,16 @@ app.post('/api/notes', (req, res) => {
     res.json(newNote);
 });
 
+app.post('/api/notes', (req, res) => {
+    const newNote = createNewNote(req.body, allNotes);
+    res.json(newNote);
+});
+
+app.delete('/api/notes/:id', (req, res) => {
+    deleteNote(req.params.id, allNotes);
+    res.json(true);
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
@@ -55,10 +65,6 @@ function createNewNote(body, notesArray) {
     return newNote;
 }
 
-app.post('/api/notes', (req, res) => {
-    const newNote = createNewNote(req.body, allNotes);
-    res.json(newNote);
-});
 
 //deleting notes
 function deleteNote(id, notesArray) {
@@ -77,10 +83,7 @@ function deleteNote(id, notesArray) {
     }
 }
 
-app.delete('/api/notes/:id', (req, res) => {
-    deleteNote(req.params.id, allNotes);
-    res.json(true);
-});
+
 
 app.listen(PORT, () =>
 console.log(`App listening at http://localhost:${PORT} 🚀`)
