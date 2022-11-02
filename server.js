@@ -1,21 +1,21 @@
+//requires
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const app = express();
 const allNotes = require('./db/db.json');
 
-//connection to port
+//localhost port
 const PORT = process.env.PORT || 3001;
 
-// middleware
+//middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-
-//connection to routes
-app.get('/api/notes', (req, res) => {
-    res.json(allNotes.slice(1));
+//routes to html pages
+app.get('/api/notes', (_req, res) => {
+    res.json(allNotes);
 });
 
 app.get('/', (req, res) => {
@@ -26,12 +26,16 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 });
 
+app.post('/api/notes', (req, res) => {
+    const newNote = createNewNote(req.body, allNotes);
+    res.json(newNote);
+});
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
-
-//creating new note
+//new notes
 function createNewNote(body, notesArray) {
     const newNote = body;
     if (!Array.isArray(notesArray))
@@ -56,8 +60,7 @@ app.post('/api/notes', (req, res) => {
     res.json(newNote);
 });
 
-
-//deleting selected note
+//deleting notes
 function deleteNote(id, notesArray) {
     for (let i = 0; i < notesArray.length; i++) {
         let note = notesArray[i];
@@ -80,5 +83,5 @@ app.delete('/api/notes/:id', (req, res) => {
 });
 
 app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT} 🚀`)
+console.log(`App listening at http://localhost:${PORT} 🚀`)
 );
