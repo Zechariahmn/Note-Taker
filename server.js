@@ -22,7 +22,7 @@ app.get("/api/notes", (req, res) => {
     readUtility("./db/db.json").then((data) => res.json(JSON.parse(data)))
 });
 
-// section writes the new note to the json file and sens back to browser
+// section writes the new note to the json file and sends it back to browser
 app.post("/api/notes", (req, res) => {
     const { title, text } = req.body
 
@@ -51,6 +51,7 @@ app.post("/api/notes", (req, res) => {
     }
 });
 
+// section allows the user to delete selected notes
 app.delete("/api/notes/:id", (req, res) => {
     readUtility("./db/db.json")
         .then((data) => {
@@ -67,6 +68,8 @@ app.delete("/api/notes/:id", (req, res) => {
             return res.status(500).json("could not delete note")
         })
 });
+
+// Routes
 app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
