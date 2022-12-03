@@ -26,7 +26,7 @@ npm i
 The user must first clone down the repo in order for them to have the required dependancies for the application to work correctly. The user can then type in the command [npm i] into their terminal command line to install the required node modules. Once the required node modules have been installed, the user can then type [node server.js] inot their terminal command line which will then prompt the user with a notification that the localhost server is online and provide them with a link to the deployed website. There the user can navigate from the index.html homepage to the notes.html page where they can create, store and delete notes at will.
 
 ## Deployed Heroku URL
-https://zechariah-note-taker.herokuapp.com/
+https://zechariah-note-app.herokuapp.com/
 
 ## License
 This project is licensed under the MIT https://opensource.org/licenses/MIT
